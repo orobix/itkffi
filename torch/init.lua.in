@@ -1,0 +1,40 @@
+local ffi = require 'ffi'
+
+require 'paths'
+
+local packageRoot = paths.thisfile('')
+
+local libpath
+if ffi.os == 'OSX' then
+  libpath = packageRoot .. '/lib/libcitkffi.dylib'
+else
+  libpath = packageRoot .. '/lib/libcitkffi.so'
+end
+
+local itk = ffi.load(libpath)
+
+local image = require 'itkffi.image'
+local filter = require 'itkffi.filter'
+
+local q = image.q
+
+local function merge(t1, t2)
+  local out = {}
+  for k,v in pairs(t1) do out[k] = v end
+  for k,v in pairs(t2) do out[k] = v end
+  return out
+end
+
+local function wrap(itklib, pixel_type, suffix)
+  local mt1 = image.wrap(itklib, pixel_type, suffix)
+  local mt2 = filter.wrap(itklib, pixel_type, suffix)
+
+  local mt = {__index = merge(mt1, mt2)}
+
+  ffi.metatype(q('ImageType',suffix), mt)
+end
+
+@ITKFFI_WRAP@
+
+return itk
+

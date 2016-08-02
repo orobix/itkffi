@@ -28,12 +28,15 @@ generate_image_type(Double3D double 3 ${SOURCE_DIR} ${srcs})
 generate_image_type(Short2D  short  2 ${SOURCE_DIR} ${srcs})
 generate_image_type(Short3D  short  3 ${SOURCE_DIR} ${srcs})
 
-file(GLOB luasrc "${CMAKE_SOURCE_DIR}/*.lua")
-
 add_library(citkffi SHARED ${generated_srcs})
 target_link_libraries(citkffi ${ITK_LIBRARIES})
 
+file(GLOB luasrc "${CMAKE_SOURCE_DIR}/*.lua")
 add_torch_package(itkffi "" "${luasrc}" "ITKFFI")
 
-install(TARGETS citkffi LIBRARY DESTINATION ${Torch_INSTALL_LUA_PATH_SUBDIR}/itkffi)
+configure_file(${CMAKE_SOURCE_DIR}/init.lua.in ${CMAKE_CURRENT_BINARY_DIR}/init.lua)
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/init.lua DESTINATION ${Torch_INSTALL_LUA_PATH_SUBDIR}/itkffi)
+
+install(TARGETS citkffi LIBRARY DESTINATION ${Torch_INSTALL_LUA_PATH_SUBDIR}/itkffi/lib)
+
 
