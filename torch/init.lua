@@ -1,9 +1,20 @@
 local ffi = require 'ffi'
 
-local itk = ffi.load('itkffi')
+require 'paths'
 
-local itkimage = require 'itkimage'
-local itkfilter = require 'itkfilter'
+local packageRoot = paths.thisfile('')
+
+local libpath
+if ffi.os == 'OSX' then
+  libpath = packageRoot .. '/libcitkffi.dylib'
+else
+  libpath = packageRoot .. '/libcitkffi.so'
+end
+
+local itk = ffi.load(libpath)
+
+local itkimage = require 'itkffi.itkimage'
+local itkfilter = require 'itkffi.itkfilter'
 
 local q = itkimage.q
 
@@ -31,3 +42,4 @@ wrap(itk,'short','Short2D')
 wrap(itk,'short','Short3D')
 
 return itk
+

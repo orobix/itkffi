@@ -1,15 +1,15 @@
 local ffi = require 'ffi'
 
+local function q(input, suffix)
+  return string.gsub(input..'${Suffix}','${Suffix}',suffix)
+end
+
 local cdef = [[
   typedef struct itkImage${Suffix} ImageType${Suffix};
 
   void GaussianSmoothing${Suffix}(ImageType${Suffix}* inputImage, ImageType${Suffix}* outputImage, double sigma);
   void LaplacianOfGaussian${Suffix}(ImageType${Suffix}* inputImage, ImageType${Suffix}* outputImage, double sigma);
   ]]
-
-local function q(input, suffix)
-  return string.gsub(input..'${Suffix}','${Suffix}',suffix)
-end
 
 local function wrap(itk, pixel_type, suffix)
   local cdef = string.gsub(cdef,'${Suffix}',suffix)
