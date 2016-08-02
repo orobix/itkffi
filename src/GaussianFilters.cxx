@@ -1,5 +1,6 @@
 #include "itkImage.h"
 #include "itkRecursiveGaussianImageFilter.h"
+#include "itkLaplacianRecursiveGaussianImageFilter.h"
 
 typedef ${PixelType} PixelType;
 const unsigned int Dim = ${Dim};
@@ -16,5 +17,18 @@ void GaussianSmoothing${Suffix}(ImageType${Suffix}* inputImage, ImageType${Suffi
   gaussianFilter->Update();
 
   outputImage->Graft(gaussianFilter->GetOutput());
+}
+
+extern "C"
+void LaplacianOfGaussian${Suffix}(ImageType${Suffix}* inputImage, ImageType${Suffix}* outputImage, double sigma)
+{
+  typedef itk::LaplacianRecursiveGaussianImageFilter<ImageType${Suffix}> LaplacianRecursiveGaussianFilterType;
+
+  LaplacianRecursiveGaussianFilterType::Pointer laplacianFilter = LaplacianRecursiveGaussianFilterType::New();
+  laplacianFilter->SetInput(inputImage);
+  laplacianFilter->SetSigma(sigma);
+  laplacianFilter->Update();
+
+  outputImage->Graft(laplacianFilter->GetOutput());
 }
 

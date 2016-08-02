@@ -1,11 +1,12 @@
-local itk = require 'torchitk'
+local itk = require 'itkffi'
 
 local im = itk.Float2D()
 im:read("input.nrrd")
 
 print(im:tensor())
 
-local out = im:gaussiansmoothing(10.0)
+--local out = im:gaussiansmoothing(10.0)
+local out = im:laplacianofgaussian(10.0)
 
 out:write("output.nrrd")
 print(out:tensor())

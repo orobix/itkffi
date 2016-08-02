@@ -4,6 +4,7 @@ local cdef = [[
   typedef struct itkImage${Suffix} ImageType${Suffix};
 
   void GaussianSmoothing${Suffix}(ImageType${Suffix}* inputImage, ImageType${Suffix}* outputImage, double sigma);
+  void LaplacianOfGaussian${Suffix}(ImageType${Suffix}* inputImage, ImageType${Suffix}* outputImage, double sigma);
   ]]
 
 local function q(input, suffix)
@@ -20,6 +21,12 @@ local function wrap(itk, pixel_type, suffix)
     gaussiansmoothing = function(im, sigma)
       local out = im:createanother()
       itk[q('GaussianSmoothing',suffix)](im,out,sigma)
+      return out
+    end,
+
+    laplacianofgaussian = function(im, sigma)
+      local out = im:createanother()
+      itk[q('LaplacianOfGaussian',suffix)](im,out,sigma)
       return out
     end
 
