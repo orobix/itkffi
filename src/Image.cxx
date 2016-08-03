@@ -21,6 +21,12 @@ void DeleteImage${Suffix}(ImageType${Suffix}* image)
 }
 
 extern "C"
+void Allocate${Suffix}(ImageType${Suffix}* image)
+{
+  image->Allocate();
+}
+
+extern "C"
 unsigned int GetImageDimension${Suffix}(ImageType${Suffix}* image)
 {
   return image->GetImageDimension();

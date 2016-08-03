@@ -22,6 +22,7 @@ local cdef = [[
   void SetData${Suffix}(ImageType${Suffix}* image, int* shape, PixelType* data);
   void ReadImage${Suffix}(ImageType${Suffix}* image, const char* filename);
   void WriteImage${Suffix}(ImageType${Suffix}* image, const char* filename);
+  void Allocate${Suffix}(ImageType${Suffix}* image);
   ]]
 
 local function q(input, suffix)
@@ -120,6 +121,10 @@ local function wrap(itk, pixel_type, suffix)
       setarr(im, itk[q('SetSize',suffix)], size, 'int', im:dim())
     end,
 
+    allocate = function(im)
+      itk[q('Allocate',suffix)](im)
+    end,
+
     read = function(im, filename)
       itk[q('ReadImage',suffix)](im, filename)
     end,
@@ -143,10 +148,12 @@ local function wrap(itk, pixel_type, suffix)
 
     fromtensor = function(im, t)
       local pt = im:pixeltype()
-      local len = itk[q('GetBufferSize',suffix)](im) * typesizes[pt]
-      -- TODO: check that data types are the same
       local sz = t:size()
       setarr(im, itk[q('SetSize',suffix)], sz, 'int', im:dim())
+      setarr(im, itk[q('SetBufferedRegionSize',suffix)], sz, 'int', im:dim())
+      itk[q('Allocate',suffix)](im)
+      local len = itk[q('GetBufferSize',suffix)](im) * typesizes[pt]
+      -- TODO: fail graciously if types don't match
       ffi.copy(itk[q('GetData',suffix)](im), t:data(), len)
     end
 
