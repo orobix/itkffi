@@ -154,7 +154,7 @@ local function wrap(itk, pixel_type, suffix)
       itk[q('Allocate',suffix)](im)
       local len = itk[q('GetBufferSize',suffix)](im) * typesizes[pt]
       -- TODO: fail graciously if types don't match
-      ffi.copy(itk[q('GetData',suffix)](im), t:data(), len)
+      ffi.copy(itk[q('GetData',suffix)](im), t:contiguous():data(), len)
     end
 
   }
