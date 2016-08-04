@@ -1,6 +1,6 @@
 # itkffi
 
-Interoperate with ITK (www.itk.org) through FFI in Torch (LuaJIT) or NumPy (Python).
+Interoperate with ITK (www.itk.org) through FFI in Torch (LuaJIT), NumPy (Python) or Julia.
 
 ## Install
 
@@ -31,9 +31,15 @@ local simg = img:gaussiansmoothing(2.0)
 t = simg:tensor()
 ```
 
-### Python
+### NumPy (Python)
 
-Coming next.
+Coming up.
+
+
+### Julia
+
+Coming up.
+
 
 ## License
 
