@@ -8,10 +8,6 @@ macro wraptype(T)
   end
 end
 
-type Image{T <: PixelType}
-  ptr::Ptr{Void}
-end
-
 suffix(T) = symbol(split(string(T),".")[2])
 
 macro dlsym(func, lib)
@@ -34,6 +30,17 @@ macro itkcall(fname, T, rettype, argtypes, args...)
     ccall(@dlsym(symbol($fname,suffix($T)),
             Libdl.dlopen("libcitkffi")),
           $rettype, $argtypes, $(args...))
+  end
+end
+
+type Image{T <: PixelType}
+  ptr::Ptr{Void}
+  function Image(p::Ptr{Void})
+    self = new(p)
+    finalizer(self, function(x)
+      @itkcall("DeleteImage", T, Void, (Ptr{Void},), x.ptr)
+    end)
+    self
   end
 end
 
