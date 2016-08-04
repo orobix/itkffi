@@ -18,6 +18,7 @@ local outtensor = torch.FloatTensor()
 out:tensor(outtensor)
 print(outtensor)
 
+im:delete()
 
 -- TODO: multichannel (not for now
 
