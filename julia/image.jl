@@ -38,7 +38,10 @@ type Image{T <: PixelType}
   function Image(p::Ptr{Void})
     self = new(p)
     finalizer(self, function(x)
-      @itkcall("DeleteImage", T, Void, (Ptr{Void},), x.ptr)
+      if x.ptr != 0
+        @itkcall("DeleteImage", T, Void, (Ptr{Void},), x.ptr)
+        x.ptr = 0
+      end
     end)
     self
   end
