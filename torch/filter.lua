@@ -7,8 +7,11 @@ end
 local cdef = [[
   typedef struct itkImage${Suffix} ImageType${Suffix};
 
-  void GaussianSmoothing${Suffix}(ImageType${Suffix}* inputImage, ImageType${Suffix}* outputImage, double sigma);
+  void GaussianConvolution${Suffix}(ImageType${Suffix}* inputImage, ImageType${Suffix}* outputImage, double sigma, int normalize);
+  void GaussianSmoothing${Suffix}(ImageType${Suffix}* inputImage, ImageType${Suffix}* outputImage, double sigma, int normalize);
   void LaplacianOfGaussian${Suffix}(ImageType${Suffix}* inputImage, ImageType${Suffix}* outputImage, double sigma);
+
+  void ConnectedComponents${Suffix}(ImageType${Suffix}* inputImage, ImageType${Suffix}* outputImage);
   ]]
 
 local function wrap(itk, pixel_type, suffix)
@@ -18,15 +21,29 @@ local function wrap(itk, pixel_type, suffix)
 
   return {
 
-    gaussiansmoothing = function(im, sigma)
+    gaussianconvolution = function(im, sigma, normalize)
+      if normalize == nil then normalize = 0 end
       local out = im:createanother()
-      itk[q('GaussianSmoothing',suffix)](im,out,sigma)
+      itk[q('GaussianConvolution',suffix)](im,out,sigma,normalize)
+      return out
+    end,
+
+    gaussiansmoothing = function(im, sigma, normalize)
+      if normalize == nil then normalize = 0 end
+      local out = im:createanother()
+      itk[q('GaussianSmoothing',suffix)](im,out,sigma,normalize)
       return out
     end,
 
     laplacianofgaussian = function(im, sigma)
       local out = im:createanother()
       itk[q('LaplacianOfGaussian',suffix)](im,out,sigma)
+      return out
+    end,
+
+    connectedcomponents = function(im)
+      local out = im:createanother()
+      itk[q('ConnectedComponents',suffix)](im,out)
       return out
     end
 

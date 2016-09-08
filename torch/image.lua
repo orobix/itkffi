@@ -68,6 +68,23 @@ local function wrap(itk, pixel_type, suffix)
     fn(im, arr)
   end
 
+  local reverse = function(tbl)
+    local out = {}
+    for i=1,#tbl do
+      out[i] = tbl[#tbl+1-i]
+    end
+    return out
+  end
+
+  local revbf = function(bf,size)
+    for i=1,#st do
+    end
+    for i=1,#st do
+      outst[i] = st[#st+1-i]
+    end
+    return outst
+  end
+
   return {
 
     createanother = function(im)
@@ -136,7 +153,7 @@ local function wrap(itk, pixel_type, suffix)
     tensor = function(im, t)
       local pt = im:pixeltype()
       local len = itk[q('GetBufferSize',suffix)](im) * typesizes[pt]
-      local sz = im:size()
+      local sz = reverse(im:size())
       if not t then
         local t = tensortypes[pt](torch.LongStorage(sz))
         ffi.copy(t:data(), itk[q('GetData',suffix)](im), len)
@@ -148,7 +165,7 @@ local function wrap(itk, pixel_type, suffix)
 
     fromtensor = function(im, t)
       local pt = im:pixeltype()
-      local sz = t:size()
+      local sz = reverse(t:size())
       setarr(im, itk[q('SetSize',suffix)], sz, 'int', im:dim())
       setarr(im, itk[q('SetBufferedRegionSize',suffix)], sz, 'int', im:dim())
       itk[q('Allocate',suffix)](im)

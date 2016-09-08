@@ -19,14 +19,15 @@ include(${SOURCE_DIR}/CMakeMacros.cmake)
 
 set(srcs
   GaussianFilters
+  ConnectedComponentFilters
   )
 
-generate_image_type(Float2D  float  2 ${SOURCE_DIR} ${srcs})
-generate_image_type(Float3D  float  3 ${SOURCE_DIR} ${srcs})
-generate_image_type(Double2D double 2 ${SOURCE_DIR} ${srcs})
-generate_image_type(Double3D double 3 ${SOURCE_DIR} ${srcs})
-generate_image_type(Short2D  short  2 ${SOURCE_DIR} ${srcs})
-generate_image_type(Short3D  short  3 ${SOURCE_DIR} ${srcs})
+generate_image_type(Float2D  float  2 ${SOURCE_DIR} "${srcs}")
+generate_image_type(Float3D  float  3 ${SOURCE_DIR} "${srcs}")
+generate_image_type(Double2D double 2 ${SOURCE_DIR} "${srcs}")
+generate_image_type(Double3D double 3 ${SOURCE_DIR} "${srcs}")
+generate_image_type(Short2D  short  2 ${SOURCE_DIR} "${srcs}")
+generate_image_type(Short3D  short  3 ${SOURCE_DIR} "${srcs}")
 
 add_library(citkffi SHARED ${generated_srcs})
 target_link_libraries(citkffi ${ITK_LIBRARIES})
